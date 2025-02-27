@@ -1,0 +1,61 @@
+spring:
+  main:
+    #lazy-initialization: true
+    banner-mode: off
+  application.name: demo-function-native
+  cloud.function.scan.packages: com.example.demo
+
+logging:
+  level:
+    root: INFO
+    io.micrometer: DEBUG  
+    sun.net.www.protocol.http: DEBUG
+    #org.springframework.boot.autoconfigure: DEBUG
+  
+management:
+  #endpoints.web.exposure.include: health,info,functions
+  endpoints.web.exposure.include: '*'
+  #info.env.enabled: true
+  
+  #https://docs.micrometer.io/micrometer/reference/implementations/otlp.html
+  otlp:
+    tracing:
+      #endpoint: ${OTLP_TRACES_ENDPOINT}
+      #endpoint: http://localhost:4318/v1/traces
+      endpoint: http://otel-collector.observability:4318/v1/traces
+    metrics:
+      export:
+        #url: ${OTLP_METRICS_ENDPOINT}
+        #url: http://localhost:4318/v1/metrics
+        url: http://otel-collector.observability:4318/v1/metrics
+        
+        step: 60s
+        
+  opentelemetry:
+    resource-attributes:
+      cluster: local
+      "service.name": ${spring.application.name}
+      #see https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/awsxrayexporter#traces-and-logs-correlation
+      aws.log.group.names: /aws/lambda/o11y-scf-native-otel
+      aws.log.group.arns: arn:aws:logs:us-east-1:620097380428:log-group:/aws/lambda/o11y-scf-native-otel:*
+  tracing:
+    sampling:
+      probability: 1.0    
+      
+  observations: #
+    key-values:
+      region: "us-east-1"
+      env: "prod"
+  #observations.annotations.enabled: true #https://docs.spring.io/spring-boot/reference/actuator/observability.html#actuator.observability.annotations
+
+    
+    
+aws:
+  dynamodb:
+    accessKey: accessKey
+    secretKey: secretKey
+    #endpoint: http://localhost:8000 
+    endpoint: https://dynamodb.us-east-1.amazonaws.com
+      
+#spring.cloud.aws.dynamodb.endpoint: http://localhost:8000       
+spring.cloud.aws.region.static: us-east-1

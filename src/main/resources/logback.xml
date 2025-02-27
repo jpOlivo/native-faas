@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	
+
+	<!-- Console appender para ver los logs en la consola -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder
+			class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+			
+			<providers>
+				<!--mdc /-->
+				<!--context /-->
+				<timestamp>
+					<fieldName>time</fieldName>
+					<timeZone>UTC</timeZone>
+					<timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS</timestampPattern>
+				</timestamp>
+				<nestedField>
+					<fieldName>resource</fieldName>
+					<providers>
+						<pattern>
+							<pattern>
+								{
+								"name": "%mdc{function_name}",
+								"version": "%mdc{function_version}",
+								"artifact": "%property{project.artifactId}",
+								"arn": "%mdc{function_arn}",
+								"origin":"%thread"
+								}
+							</pattern>
+						</pattern>
+					</providers>
+				</nestedField>
+				<!-- Event-specific Custom Fields -->
+				<arguments>
+					<fieldName>metadata</fieldName>
+				</arguments>
+				<pattern>
+					<pattern> 
+						{ 
+						"level": "%level", 
+						"country": "", 
+						"organization": "",
+						"env": "%property{otel.resource.deployment.environment}",
+						"message": "%message", 
+						"trace_id": "%mdc{traceId}",
+						"span_id": "%mdc{spanId}"
+						 } 
+						 </pattern>
+				</pattern>
+				<stackTrace>
+				</stackTrace>
+			</providers>
+		</encoder>
+	</appender>
+
+	<!-- Configuración del root logger -->
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+
+</configuration>
