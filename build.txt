@@ -1,3 +1,5 @@
 docker build -t al2023-graalvm21:native-app .
 
 docker run --platform linux/amd64 -it -v `pwd`:`pwd` -w `pwd` -v ~/.m2:/root/.m2 al2023-graalvm21:native-app ./mvnw clean -X -Pnative -DskipTests native:compile
+
+zip archive.zip -9 -j bootstrap ./target/spring-cloud-function-demo
