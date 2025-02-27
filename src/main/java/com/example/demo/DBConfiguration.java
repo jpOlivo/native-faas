@@ -51,7 +51,7 @@ public class DBConfiguration {
 	public DynamoDbClient getDynamoDbClient() {
 		
 		return DynamoDbClient.builder().endpointOverride(URI.create(endpoint)).region(Region.US_EAST_1)
-				//.credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
+				.credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
 				.overrideConfiguration(ClientOverrideConfiguration.builder()
 					    .addExecutionInterceptor(AwsSdkTelemetry.create(openTelemetry).newExecutionInterceptor())
 					    .build())

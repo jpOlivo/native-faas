@@ -21,14 +21,11 @@ management:
   otlp:
     tracing:
       #endpoint: ${OTLP_TRACES_ENDPOINT}
-      #endpoint: http://localhost:4318/v1/traces
-      endpoint: http://otel-collector.observability:4318/v1/traces
+      endpoint: http://localhost:4318/v1/traces
     metrics:
       export:
         #url: ${OTLP_METRICS_ENDPOINT}
-        #url: http://localhost:4318/v1/metrics
-        url: http://otel-collector.observability:4318/v1/metrics
-        
+        url: http://localhost:4318/v1/metrics
         step: 60s
         
   opentelemetry:
@@ -37,7 +34,7 @@ management:
       "service.name": ${spring.application.name}
       #see https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/awsxrayexporter#traces-and-logs-correlation
       aws.log.group.names: /aws/lambda/o11y-scf-native-otel
-      aws.log.group.arns: arn:aws:logs:us-east-1:620097380428:log-group:/aws/lambda/o11y-scf-native-otel:*
+      aws.log.group.arns: arn:aws:logs:us-east-1:foo:log-group:/aws/lambda/o11y-scf-native-otel:*
   tracing:
     sampling:
       probability: 1.0    
@@ -54,8 +51,8 @@ aws:
   dynamodb:
     accessKey: accessKey
     secretKey: secretKey
-    #endpoint: http://localhost:8000 
-    endpoint: https://dynamodb.us-east-1.amazonaws.com
+    endpoint: http://localhost:8000 
+    #endpoint: https://dynamodb.us-east-1.amazonaws.com
       
 #spring.cloud.aws.dynamodb.endpoint: http://localhost:8000       
 spring.cloud.aws.region.static: us-east-1
